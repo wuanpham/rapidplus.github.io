@@ -1,38 +1,29 @@
-<div style="font-family: sans-serif; max-width: 400px;">
-  <h3>ESP32 OTA Update</h3>
-  <label>ESP32 IP Address:</label><br>
-  <input id="ip" type="text" placeholder="192.168.x.x" style="width:100%;"><br><br>
-  <input type="file" id="file"><br><br>
-  <button onclick="uploadFirmware()">Upload & Update</button>
-  <p id="status"></p>
-</div>
-
-<script>
-async function uploadFirmware() {
-  const ip = document.getElementById('ip').value.trim();
-  const fileInput = document.getElementById('file');
-  const status = document.getElementById('status');
-  if (!ip || fileInput.files.length === 0) {
-    status.innerText = "Please enter IP and choose .bin file";
-    return;
-  }
-
-  const file = fileInput.files[0];
-  const url = `http://${ip}/update`;
-  status.innerText = "Uploading...";
-
-  try {
-    const res = await fetch(url, {
-      method: "POST",
-      body: file,
-      headers: {
-        "Content-Type": "application/octet-stream"
-      }
-    });
-    const text = await res.text();
-    status.innerText = text.includes("OK") ? "✅ Update success! Rebooting device..." : "❌ Update failed: " + text;
-  } catch (e) {
-    status.innerText = "❌ Error: " + e;
-  }
-}
-</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ESP Firmware Flash</title>
+  <script type="module" src="https://unpkg.com/esp-web-tools@latest/dist/web/install-button.js"></script>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #fafafa;
+      text-align: center;
+      padding: 40px;
+    }
+    h1 {
+      color: #222;
+      font-weight: 600;
+    }
+    esp-web-install-button {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>⚙️ Flash Firmware ESP</h1>
+  <p>Kết nối thiết bị ESP qua cổng USB, sau đó nhấn nút bên dưới để nạp firmware.</p>
+  <esp-web-install-button manifest="manifest.json"></esp-web-install-button>
+</body>
+</html>
